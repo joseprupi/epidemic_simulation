@@ -96,4 +96,5 @@ plot_model_prediction_all(SEIDR_model.get_results())
 
 ```
 ![Model results](/plot/model_results.png)
-Format: ![Alt Text](url)
+![Model prediction](/plot/model_prediction.png)
+![Model prediction. All outputs](/plot/model_prediction_all.png)
