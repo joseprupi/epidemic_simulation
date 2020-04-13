@@ -95,5 +95,5 @@ plot_model_prediction(SEIDR_model.get_infected(), SEIDR_model.get_deaths())
 plot_model_prediction_all(SEIDR_model.get_results())
 
 ```
-![Model results](/images/model_results.png)
+![Model results](/plot/model_results.png)
 Format: ![Alt Text](url)
