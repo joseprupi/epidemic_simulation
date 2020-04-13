@@ -7,4 +7,11 @@ The three main parts of the module are:
 * Fit classes: Classes where the minimization is defined
 * Models: Any model to fit and used to forecast
 
-## 
+## Extend the module
+
+To extend the module override the correspondant base classes for:
+* Data sources
+* Fit classes
+* Models
+
+## Example
