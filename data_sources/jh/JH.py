@@ -1,6 +1,7 @@
 from ..Source import Source
 
 import git
+from git import Repo
 import pandas as pd
 
 import os
@@ -10,7 +11,7 @@ class JH(Source):
 
     def __init__(self):
 
-        self.data_path = os.path.dirname(os.path.abspath(__file__)) + '/git_data'
+        self.data_path = os.path.dirname(os.path.abspath(__file__)) + '/git_data/COVID-19/'
         self.n_days = None
 
         self.confirmed_US = None
@@ -134,43 +135,43 @@ class JH(Source):
         return df.cumsum()[-1:]
 
     def update(self):
-        self.update()
+        self.update_git()
         self.process_data()
 
     def update_git(self):
 
         print()
-        if os.path.exists(self.data_path + '/COVID-19'):
-            repo = git.Repo(os.path.dirname(self.data_path + '/COVID-19'))
+        if os.path.exists(self.data_path):
+            repo = git.Repo(os.path.dirname(self.data_path))
             origin = repo.remotes.origin
             origin.pull()
         else:
-            git.Git(os.path.dirname(self.data_path).clone("https://github.com/CSSEGISandData/COVID-19"))
+            Repo.clone_from("https://github.com/CSSEGISandData/COVID-19", os.path.dirname(self.data_path))
 
     def process_data(self):
 
         # Read confirmed cases from US csv
         self.confirmed_US = pd.read_csv(
-            self.data_path + '/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv', keep_default_na=False)
+            self.data_path + 'csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv', keep_default_na=False)
 
         self.confirmed_US = self.confirmed_US.rename(columns={'Admin2': 'Town_City'})
 
         # Read deaths from US csv
         self.deaths_US = pd.read_csv(
-            self.data_path + '/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv')
+            self.data_path + 'csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv')
 
         self.deaths_US = self.deaths_US.rename(columns={'Admin2': 'Town_City'})
 
         # Read confirmed cases from US csv
         self.confirmed_global = pd.read_csv(
-            self.data_path + '/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv', keep_default_na=False)
+            self.data_path + 'csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv', keep_default_na=False)
 
         self.confirmed_global = self.confirmed_global.rename(columns={'Province/State': 'Province_State'})
         self.confirmed_global = self.confirmed_global.rename(columns={'Country/Region': 'Country_Region'})
 
         # Read deaths from US csv
         self.deaths_global = pd.read_csv(
-            self.data_path + '/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv', keep_default_na=False)
+            self.data_path + 'csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv', keep_default_na=False)
 
         self.deaths_global = self.deaths_global.rename(columns={'Province/State': 'Province_State'})
         self.deaths_global = self.deaths_global.rename(columns={'Country/Region': 'Country_Region'})
@@ -181,7 +182,7 @@ class JH(Source):
 
         # Read the population of areas
         self.population = pd.read_csv(
-            self.data_path + '/COVID-19/csse_covid_19_data/UID_ISO_FIPS_LookUp_Table.csv', keep_default_na=False)
+            self.data_path + 'csse_covid_19_data/UID_ISO_FIPS_LookUp_Table.csv', keep_default_na=False)
 
         self.population = self.population.rename(columns={'Admin2': 'Town_City'})
 
@@ -216,5 +217,3 @@ class JH(Source):
             raise ValueError('Invalid area')
         else:
             return int(df.iloc[0]['Population'])
-
-
