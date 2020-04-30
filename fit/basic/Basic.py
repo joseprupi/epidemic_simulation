@@ -15,7 +15,7 @@ class Basic(Fit):
     def eval(self, params, mean, estimator, days):
 
         self.model.set_params(params)
-        self.model.solve()
+        self.model.solve(self.data.t)
 
         I_pred = np.clip(self.model.get_infected(), 0, np.inf)
         I_true = self.data.get_infected().to_numpy()[0]
@@ -43,7 +43,7 @@ class Basic(Fit):
     def fit_model(self, init_params, mean, estimator, days, bounds):
         self.params = init_params
         bounds = bounds
-        self.sol = minimize(self.eval, self.params, args=(mean, estimator, days), bounds=bounds, method='L-BFGS-B')
+        self.sol = minimize(self.eval, self.params, args=(mean, estimator, days), bounds=bounds, method='L-BFGS-B', tol=0.0001)
         print(self.sol)
 
     def get_solution_parms(self):

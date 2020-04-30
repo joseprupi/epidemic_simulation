@@ -12,7 +12,7 @@ class JH(Source):
     def __init__(self):
 
         self.data_path = os.path.dirname(os.path.abspath(__file__)) + '/git_data/COVID-19/'
-        self.n_days = None
+        self.t = None
 
         self.confirmed_US = None
         self.deaths_US = None

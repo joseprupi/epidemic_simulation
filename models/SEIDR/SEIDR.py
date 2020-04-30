@@ -28,12 +28,11 @@ class SEIDR(Model):
         self.gamma_out = 1/12
         self.lambda_icu = (1/7) * 0.5
 
-        self.days = 90
+        self.days = None
 
         self.sol = None
 
     def init_model(self, **kwargs):
-        self.days = kwargs['t']
         self.S = kwargs['S']
         self.I_0 = kwargs['I_0']
         self.D = kwargs['D']
@@ -92,14 +91,14 @@ class SEIDR(Model):
 
         return [S_out, E_out, I_0_out, I_icu_out, I_in_out, I_out_out, D_out, R_out]
 
-    def solve(self):
-        sol = solve_ivp(self.SEIDR_model, [0, self.days],
+    def solve(self, days):
+        sol = solve_ivp(self.SEIDR_model, [0, days],
                         [self.S, self.E, self.I_0, self.I_icu, self.I_in, self.I_out,
                          self.D, self.R],
                         args=(self.mu, self.beta, self.nu, self.sigma, self.omega_icu, self.omega_in, self.omega_out,
                               self.gamma_icu, self.gamma_in, self.gamma_out,
                               self.lambda_icu),
-                        t_eval=np.arange(self.days))
+                        t_eval=np.arange(days))
 
         self.sol = sol
 
